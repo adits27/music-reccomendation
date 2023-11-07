@@ -1,3 +1,4 @@
+# Imports to handle pandas, sklearn, spotify and streamlit
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
@@ -14,15 +15,17 @@ import streamlit as st
 import streamlit.components.v1 as components
 import time
 
-## Initialize the Spotify Client
+# Initialize the Spotify Client by passing your client id and client secret through environment variables. 
+# You can configure this in your Spotify Developer account
 client_id = os.environ["SPOTIFY_CLIENT_ID"]
 client_secret = os.environ["SPOTIFY_CLIENT_SECRET"]
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
 
-## Load the data
+
+# Load the data through pandas
 dataset = pd.read_csv("data/data.csv")
 
-# Calculate the sum of squared distances for different values of k
+# The year column is an irrelevant feature, we can drop it. Calculate the sum of squared distances for different values of k
 X = dataset.select_dtypes(np.number)
 X.drop(['year'],axis=1,inplace=True)
 columns = list(X.columns)
@@ -32,7 +35,7 @@ for k in range(1, 25):
     kmeans.fit(X)
     sse.append(kmeans.inertia_)
 
-# Plot the results
+# Visualize the ideal K value through matplotlib
 plt.figure(figsize=(8, 6))
 plt.plot(range(1, 25), sse, marker='o')
 plt.title('Elbow Method for Optimal k')
